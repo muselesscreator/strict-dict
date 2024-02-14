@@ -1,30 +1,83 @@
-# React + TypeScript + Vite
+# strict-dict
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Trust-worthy key-stores for Javascript.
 
-Currently, two official plugins are available:
+The purpose of this library is to provide a simple facility for catching a specific category of bug as soon
+as it happens in the code: reading an object whose keys you trust, and mis-typing a key.  In Javascript,
+this results in an undefined value, which is fine in some cases, but in others where you rely on that value
+being present, it is valuable to be able to actively catch these errors early, rather than 4-8 steps down the
+line where they start causing problems.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Utilities
 
-## Expanding the ESLint configuration
+### `StrictDict`, `useStrictDict`- Strict dictionary
+Defines object that complain when called with invalid keys. useful for when using defined modules, where you want to treat invalid keys as an error behavior (such as when using an object as a key-store).  Primarily, this is a method to avoid using "magic strings" in javascript code and tests.
+An optional config object can be passed to control the behavior in a given run environment.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
+#### Usage
+Wrap an object in StrictDict, and it will raise an error if called with invalid keys.
 ```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
+const selectors = StrictDict({
+  validSelector1: () => ({}),
+  validSelector2: () => ({}),
+});
+const selector = selectors.invalidSelector; // raises an error
+```
+And now with custom behavior in production environment (default in all others)
+```js
+const selectors = StrictDict({
+  validSelector1: () => ({}),
+  validSelector2: () => ({}),
+}, {
+  production: ({ target, key }) => {},
+});
+const selector = selectors.invalidSelector; // raises custom error in production environment
+```
+`useStrictDict` is a hook that provides the config object based on a top-level context provider
+(StrictContext)
+```js
+const App = () => (
+  <StrictContext.Provider value={{
+    production: ({ target, key }) => {},
+  }}>
+    <MyApp />
+  </StrictContext.Provider>
+);
+const MyApp = () => {
+  const selectors = useStrictDict()({
+    validSelector1: () => ({}),
+    validSelector2: () => ({}),
+  });
+  const selector = selectors.invalidSelector; // raises custom error in production environment
+  ...
 }
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### `keyStore` and `useKeyStore`- Strict Dictionary of keys from a given object.
+use `keyStore` to quickly grab the keys from an object or StrictDict as a StrictDict themselves.
+#### Usage
+```js
+const selectorKeys = keyStore(selectors);
+selectorKeys.validSelector1; // 'validSelector1';
+selectorKeys.invalidSelector; // raises an error;
+```
+
+`useKeyStore` is a hook that provides the config object based on a top-level context provider
+(StrictContext)
+```js
+const App = () => (
+  <StrictContext.Provider value={{
+    production: ({ target, key }) => {},
+  }}>
+    <MyApp />
+  </StrictContext.Provider>
+);
+const MyApp = () => {
+  const selectors = useKeyStore()({
+    validSelector1: () => ({}),
+    validSelector2: () => ({}),
+  });
+  const selector = selectors.invalidSelector; // raises custom error in production environment
+  ...
+}
+```
