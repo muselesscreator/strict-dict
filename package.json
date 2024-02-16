@@ -4,16 +4,15 @@
   "author": "muselesscreator",
   "version": "0.0.1",
   "type": "module",
-  "main": "dist/index.cts",
+  "main": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/muselesscreator/strict-dict.git"
   },
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "default": "./dist/index.cjs",
-      "require": "./dist/index.cts"
+      "import": "./dist/esm/index.js",
+      "default": "./dist/index.js"
     }
   },
   "files": [
