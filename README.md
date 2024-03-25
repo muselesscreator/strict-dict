@@ -84,3 +84,6 @@ const MyApp = () => {
 
 ### TypeScript considerations
 When using TypeScript, you can type these as `Record<string, targetType>` for easy access during tests.
+
+### API
+API documentation available at https://muselesscreator.github.io/strict-dict/
