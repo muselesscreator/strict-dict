@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {
   vi,
   describe,
@@ -8,7 +8,7 @@ import {
 import StrictContext from './StrictContext';
 
 vi.mock('react', () => ({
-  default: { createContext: vi.fn(context => ({ createContext: context })) },
+   createContext: vi.fn(context => ({ createContext: context })),
 }));
 
 describe('StrictContext', () => {

@@ -4,3 +4,12 @@ export { default as StrictDict } from './StrictDict';
 export { default as keyStore } from './keyStore';
 export { default as useStrictDict } from './useStrictDict';
 export { default as useKeyStore } from './useKeyStore';
+
+export type {
+  StrictTarget,
+  StrictKey,
+  ObjectValue,
+  ConfigObject,
+  ConfigFunction,
+  StrictObject,
+} from './types';

@@ -12,8 +12,7 @@ vi.mock('./StrictDict', () => ({
 }));
 vi.mock('./StrictContext', () => ({ default: { Strict: 'context' } }));
 vi.mock('react', () => ({ 
-  ...vi.importActual('react'),
-  default: { useContext: vi.fn((context) => context) },
+  useContext: vi.fn((context) => context),
 }));
 
 describe('useStrictDict', () => {

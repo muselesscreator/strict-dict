@@ -4,6 +4,7 @@ import {
   StrictKey,
   StrictTarget,
   SymbolObject,
+  StrictObject,
 } from './types';
 
 const strictGet = (
@@ -36,7 +37,17 @@ const strictGet = (
   return undefined;
 };
 
-export default (dict: StrictTarget, config = {}) => {
+/**
+ * StrictDict wrapper.
+ * This function returns a Proxy object that wraps the given dictionary, wich custom
+ * getter behavior when an invalid key is passed.
+ */
+export default (
+  /** The dictionary to wrap. */
+  dict: StrictTarget,
+  /** Optional configuration object. */
+  config: ConfigObject = {}
+): StrictObject => {
   const get = (target: SymbolObject, name: StrictKey) =>
     strictGet(target, name, config);
 
