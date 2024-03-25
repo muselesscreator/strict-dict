@@ -2,7 +2,7 @@
   "name": "@muselesscreator/strict-dict",
   "description": "Trustworthy key-stores for Javascript",
   "author": "muselesscreator",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "module",
   "license": "MIT",
   "main": "dist/index.js",
